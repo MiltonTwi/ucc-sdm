@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ./app
+    volumes:
+      - ./app:/app
+    depends_on:
+      - db
+    networks:
+      - webnet
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: E11EVENN
+      POSTGRES_USER: Milton
+      POSTGRES_PASSWORD: 12345678
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - webnet
+
+  nginx:
+    build:
+      context: ./nginx
+    volumes:
+      - ./nginx:/etc/nginx
+    ports:
+      - "8080:8080"
+    depends_on:
+      - app
+    networks:
+      - webnet
+
+volumes:
+  db-data:
+
+networks:
+  webnet:
